@@ -4,8 +4,11 @@ from time import sleep
 
 def cliente():
     st = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    host = 'localhost'
-    port = 16033
+    # host = 'localhost'
+    # port = 16033
+    print('¿Indique la dirección y puerto del servidor?')
+    host = str(input('Dirección (tip: localhost): '))
+    port = int(input('Puerto (tip: 16033): '))
     st.connect((host, port))
 
     repeticiones = 3

@@ -1,8 +1,15 @@
 import select
 import socket
+import sys
 import time
 from _socket import SHUT_RDWR
 import string
+
+
+def print_to_stderr(*a):
+    # Here a is the array holding the objects
+    # passed as the argument of the function
+    print(*a, file=sys.stderr)
 
 
 def servidor():
@@ -21,7 +28,8 @@ def servidor():
             if fd == st:
                 # import pdb; pdb.set_trace()
                 cliente, ruta_cliente = st.accept()
-                print('dirección cliente:', ruta_cliente)
+                imprimir = 'Dirección cliente: ' + str(ruta_cliente[0]) + ' ' + str(ruta_cliente[1])
+                print_to_stderr(imprimir)
                 lista_sockets.append(cliente)
             else:
                 peticion = fd.recv(1024)
@@ -31,6 +39,8 @@ def servidor():
                     fd.close()
                 else:
                     # hay petición: se gestiona
+                    imprimir = 'Petición cliente: ' + peticion.decode('utf-8')
+                    print_to_stderr(imprimir)
                     respuesta = generar_respuesta(peticion.decode('utf-8'))
                     fd.send(bytes(respuesta, "utf-8"))
 
