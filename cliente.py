@@ -3,15 +3,18 @@ import sys
 from time import sleep
 
 
+def pedir_direccion():
+    print('¿Indique la dirección y puerto del servidor?')
+    host = str(input('Dirección (tip: localhost): '))
+    port = int(input('Puerto (tip: 16033): '))
+    return host, port
 
 
 def cliente():
     st = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     # host = 'localhost'
     # port = 16033
-    print('¿Indique la dirección y puerto del servidor?')
-    host = str(input('Dirección (tip: localhost): '))
-    port = int(input('Puerto (tip: 16033): '))
+    host, port = pedir_direccion()
     try:
         st.connect((host, port))
     except socket.gaierror:
@@ -20,7 +23,6 @@ def cliente():
 
     repeticiones = 3
     while repeticiones != 0:
-
         cometido = pedir_cometido()
         preguntado = pedir_preguntado(cometido)
         st.send(bytes(preguntado, "utf-8"))
