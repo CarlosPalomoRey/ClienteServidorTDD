@@ -1,6 +1,6 @@
 import unittest
 
-import servidor
+import servidor_v2_select as servidor
 
 
 class tests(unittest.TestCase):

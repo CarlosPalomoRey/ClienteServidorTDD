@@ -3,19 +3,23 @@ from time import sleep
 
 
 def cliente():
+    st = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    host = 'localhost'
+    port = 16033
+    st.connect((host, port))
+
     repeticiones = 3
     while repeticiones != 0:
-        st = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        host = 'localhost'
-        port = 16033
-        st.connect((host, port))
+
         cometido = pedir_cometido()
         preguntado = pedir_preguntado(cometido)
         st.send(bytes(preguntado, "utf-8"))
         respuesta = st.recv(128)
         print(f'Respuesta: {respuesta.decode("utf-8")}')
-        st.close()
+
         repeticiones -= 1
+
+    st.close()
 
 
 # tomar variables de la entrada de usuario

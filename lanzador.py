@@ -1,5 +1,6 @@
 import cliente as cli
-import servidor as serv
+# import servidor as serv
+import servidor_v2_select as serv
 
 opcion = str(input("Introduzca (1) para ejecutar Servidor o (2) para Cliente: "))
 if opcion == '1':

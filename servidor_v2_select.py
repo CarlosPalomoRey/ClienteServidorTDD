@@ -1,23 +1,38 @@
+import select
 import socket
 import time
 from _socket import SHUT_RDWR
 import string
 
+
 def servidor():
     st = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    st.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
     print('Servidor levantado')
     host = 'localhost'
     port = 16033
     st.bind((host, port))
-    st.listen(3)
+    st.listen()
 
+    lista_sockets = [st]
     while True:
-        nuevo_socket, nueva_ruta_socket = st.accept()
-        print(nueva_ruta_socket)
-        escucha = (nuevo_socket.recv(128)).decode('utf-8')
-        respuesta = generar_respuesta(escucha)
-        nuevo_socket.send(bytes(respuesta, "utf-8"))
-        nuevo_socket.close()
+        lista_ready, _, _ = select.select(lista_sockets, [], [])
+        for fd in lista_ready:
+            if fd == st:
+                # import pdb; pdb.set_trace()
+                cliente, ruta_cliente = st.accept()
+                print('dirección cliente:', ruta_cliente)
+                lista_sockets.append(cliente)
+            else:
+                peticion = fd.recv(1024)
+                if not peticion:
+                    # cierre de cliente
+                    lista_sockets.remove(fd)
+                    fd.close()
+                else:
+                    # hay petición: se gestiona
+                    respuesta = generar_respuesta(peticion.decode('utf-8'))
+                    fd.send(bytes(respuesta, "utf-8"))
 
 
 def generar_respuesta(escucha):
