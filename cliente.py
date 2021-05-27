@@ -1,5 +1,8 @@
 import socket
+import sys
 from time import sleep
+
+
 
 
 def cliente():
@@ -9,7 +12,11 @@ def cliente():
     print('¿Indique la dirección y puerto del servidor?')
     host = str(input('Dirección (tip: localhost): '))
     port = int(input('Puerto (tip: 16033): '))
-    st.connect((host, port))
+    try:
+        st.connect((host, port))
+    except socket.gaierror:
+        print("Error: la dirección o el puerto del servidor son incorrectos")
+        sys.exit()
 
     repeticiones = 3
     while repeticiones != 0:
